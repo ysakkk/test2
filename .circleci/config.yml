@@ -4,6 +4,7 @@ setup: true
 
 orbs:
   c: circleci/continuation@1.0.0
+  cli: circleci/circleci-cli@0.1.9
 
 jobs:
   say-hello:
@@ -12,6 +13,7 @@ jobs:
 
     steps:
       - checkout
+      - cli/install
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
