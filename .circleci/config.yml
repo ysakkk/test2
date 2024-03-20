@@ -1,0 +1,50 @@
+version: 2.1
+
+setup: true
+
+parameters:
+  op:
+    type: enum
+    enum: [ "", "build-and-deploy", "deploy" ]
+    default: ""
+  component:
+    type: enum
+    enum: [ "", "myserver" ]
+    default: ""
+  image-tag:
+    type: string
+    default: "latest"
+
+orbs:
+  c: circleci/continuation@1.0.0
+  cli: circleci/circleci-cli@0.1.9
+
+jobs:
+  say-hello:
+    docker:
+      - image: cimg/base:current
+
+    environment:
+      IMAGETAG: << pipeline.parameters.image-tag >>
+    steps:
+      - checkout
+      - cli/install
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
+      - run: circleci config pack .circleci/ci_config > .circleci/merged.yml
+      #- c/continue:
+      #    configuration_path: .circleci/merged.yml
+      - run: echo "<< pipeline.parameters.op >>"
+      - run: echo "<< pipeline.parameters.component >>"
+      - run: echo "Image tag used was ${IMAGETAG}"
+      - run: echo "Image tag used was << pipeline.parameters.image-tag >>"
+  build:
+    machine: true
+    steps:
+      - run: ":"
+
+workflows:
+  say-hello-workflow: 
+    jobs:
+      - say-hello
