@@ -39,6 +39,10 @@ jobs:
       - run: echo "<< pipeline.parameters.component >>"
       - run: echo "Image tag used was ${IMAGETAG}"
       - run: echo "Image tag used was << pipeline.parameters.image-tag >>"
+  build:
+    machine: true
+    steps:
+      - run: ":"
 
 workflows:
   say-hello-workflow: 
